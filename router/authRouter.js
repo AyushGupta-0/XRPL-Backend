@@ -4,7 +4,7 @@ const xumm = require('../utils/xumm')
 var authRouter = (io) => {
 	router.get('/createSignInPayload', async (req, res) => {
 		const transaction = {
-			TransactionType: "SignIn",
+			TransactionType: "SignIn"
 
 		}
 		const subscription = await xumm.payload?.createAndSubscribe(transaction, async (event) => {
