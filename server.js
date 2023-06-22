@@ -24,5 +24,5 @@ app.use(express.urlencoded({ extended: true }))
 // Auth Router
 app.use('/api/auth', authRouter)
 
-io.listen(process.env.SOCKET_PORT || 5001)
-app.listen(PORT, () => console.log(`Server started on port ${PORT || 5000}. Socket started on port ${process.env.SOCKET_PORT || 5001}`))
+io.listen(process.env.SOCKETIO_PORT)
+app.listen(PORT, () => console.log(`Server started on port ${PORT}. Socket started on port ${process.env.SOCKETIO_PORT}`))
