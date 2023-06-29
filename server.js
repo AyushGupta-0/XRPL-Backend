@@ -13,6 +13,7 @@ const io = require('socket.io')(server, {
     }
 })
 const authRouter = require('./router/authRouter')(io)
+const nftRouter = require('./router/nftRouter')(io)
 const PORT = process.env.SERVER_PORT || 5000
 
 // Middlewares
@@ -23,6 +24,7 @@ app.use(express.urlencoded({ extended: true }))
 
 // Auth Router
 app.use('/api/auth', authRouter)
+app.use('/api/nft', nftRouter)
 
 io.listen(process.env.SOCKETIO_PORT)
 app.listen(PORT, () => console.log(`Server started on port ${PORT}. Socket started on port ${process.env.SOCKETIO_PORT}`))
