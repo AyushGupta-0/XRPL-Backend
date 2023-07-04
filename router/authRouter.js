@@ -1,22 +1,7 @@
 const router = require('express').Router()
-const {xumm, sdk} = require('../utils/xumm')
+const {createAccountWithXumm, createAccountWithOAuth} = require('../controllers/authController')
 
-module.exports = (io) => {
-	router.get('/createSignInPayload', async (req, res) => {
-		const transaction = {
-			TransactionType: "SignIn"
-		}
-		const subscription = await xumm.payload?.createAndSubscribe(transaction, async (event) => {
-			if(event.data.signed){
-				const payload = await xumm.payload?.get(event.data.payload_uuidv4, true)
-				console.log(payload)
-				io.emit('signed', { signed: true, account: payload.response.account })
-			}
-		})
-		res.json(subscription)
-	})
-	router.post('/login', async (req, res) => {
-		
-	})
-	return router;
-}
+router.get('/createAccountWithXumm', createAccountWithXumm)
+router.get('/createAccountWithOAuth', createAccountWithOAuth)
+
+module.exports = router;
