@@ -8,8 +8,13 @@ This is the backend repository for the NFT Marketplace.
 
 ### Authentication
 
-- Create Account With Xumm (Anonymous User): `GET /api/auth/createAccountWithXumm`
+- Get Account Data: `GET /api/auth/getUserData` [Set 'authorization' header as 'Bearer <token>']
+
+- Create Account With Xumm (Anonymous User): `GET /api/auth/createAccountWithXumm` [Socket IO Channel `accountCreated`]
+- Login Account With Xumm (Anonymous User): `GET /api/auth/loginAccountWithXumm` [Socket IO Channel `accountLoggedIn`]
+
 <!-- - Create Account With OAuth (Authenticated User): `GET /api/auth/createAccountWithOAuth` -->
+<!-- - Login Account With OAuth (Authenticated User): `GET /api/auth/loginAccountWithOAuth` -->
 
 ### NFTs
 

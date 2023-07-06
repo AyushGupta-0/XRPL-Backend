@@ -1,3 +1,4 @@
+const db = require('../utils/firebase')
 const jwt = require("jsonwebtoken");
 
 module.exports = {
@@ -9,10 +10,29 @@ module.exports = {
             req.token = bearerToken;
             jwt.verify(req.token, process.env.SECRET, (err, authData) => {
                 if (err) {
-                    console.log(err);
+                    res.status(400).json({
+                        status: "failed",
+                        msg: "Invalid Token",
+                    });
                 } else {
-                    // TODO: Verify auth data. Pending discussion on auth
-                    console.log(authData);
+                    if(Date.now() > authData.expiry){
+                        res.status(401).json({
+                            status: "failed",
+                            msg: "Token Expired",
+                        });
+                    }else{
+                        db.collection('users').doc(authData.address).get().then((doc) => {
+                            if(doc.exists){
+                                req.user = doc.data()
+                                next()
+                            }else{
+                                res.status(404).json({
+                                    status: "failed",
+                                    msg: "User does not exist",
+                                });
+                            }
+                        })
+                    }
                 }
             });
         } else {
