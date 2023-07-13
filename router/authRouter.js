@@ -7,7 +7,7 @@ router.get('/getUserData', verifyToken, getUserData)
 router.get('/createAccountWithXumm', createAccountWithXumm)
 router.get('/loginAccountWithXumm', loginAccountWithXumm)
 
-router.get('/createAccountWithOAuth', createAccountWithOAuth)
-router.get('/loginAccountWithOAuth', loginAccountWithOAuth)
+router.post('/createAccountWithOAuth', createAccountWithOAuth)
+router.post('/loginAccountWithOAuth', loginAccountWithOAuth)
 
 module.exports = router;
