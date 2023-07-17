@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const {createAccountWithXumm, createAccountWithOAuth, loginAccountWithXumm, loginAccountWithOAuth, getUserData} = require('../controllers/authController')
+const {createAccountWithXumm, createAccountWithOAuth, loginAccountWithXumm, loginAccountWithOAuth, getUserData} = require('../controllers/auth')
 const {verifyToken} =require('../middlewares/verifyJWT')
 
 router.get('/getUserData', verifyToken, getUserData)

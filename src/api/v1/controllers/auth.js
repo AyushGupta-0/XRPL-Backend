@@ -1,7 +1,7 @@
-const {fetchBalance} = require('../utils/xrpl')
-const xumm = require('../utils/xumm')
-const db = require('../utils/firebase')
-const {generateToken} = require('../utils/jwt')
+const {fetchBalance} = require('../helpers/xrpl')
+const xumm = require('../helpers/xumm')
+const db = require('../helpers/firebase')
+const {generateToken} = require('../helpers/jwt')
 
 module.exports = {
     createAccountWithXumm: async (req, res) => {

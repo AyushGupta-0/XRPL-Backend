@@ -2,7 +2,7 @@ const express = require('express')
 const xrpl = require('xrpl')
 const cors = require('cors')
 const helmet = require('helmet')
-const linkSocketio = require('./middlewares/linkSocketio')
+const linkSocketio = require('./api/v1/middlewares/linkSocketio')
 require('dotenv').config()
 
 // App Config
@@ -28,7 +28,7 @@ const PORT = process.env.SERVER_PORT || 5000
 
 
 // Router
-app.use('/api', require('./router/index'))
+app.use('/api', require('./api/v1/routes/index'))
 
 io.listen(process.env.SOCKETIO_PORT)
 app.listen(PORT, () => console.log(`Server started on port ${PORT}. Socket started on port ${process.env.SOCKETIO_PORT}`))

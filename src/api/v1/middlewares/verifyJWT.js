@@ -1,4 +1,4 @@
-const db = require('../utils/firebase')
+const db = require('../helpers/firebase')
 const jwt = require("jsonwebtoken");
 
 module.exports = {
