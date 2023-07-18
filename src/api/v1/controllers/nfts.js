@@ -1,5 +1,5 @@
-const db = require('../utils/firebase')
-const uploadToIPFS = require('../utils/ipfs')
+const db = require('../helpers/firebase')
+const uploadToIPFS = require('../helpers/ipfs')
 
 module.exports = {
     getAllNFTs: (req, res) => {
