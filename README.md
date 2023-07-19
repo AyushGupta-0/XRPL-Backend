@@ -8,7 +8,7 @@ This is the backend repository for the NFT Marketplace.
 
 ### Authentication
 
-- Get Account Data: `GET /api/auth/getUserData` [Set 'authorization' header as 'Bearer <token>']
+- Get Account Data: `GET /api/auth/profile` [Set 'authorization' header as 'Bearer <token>']
 
 - Create Account With Xumm (Anonymous User): `GET /api/auth/createAccountWithXumm` [Socket IO Channel `accountCreated`]
 - Login Account With Xumm (Anonymous User): `GET /api/auth/loginAccountWithXumm` [Socket IO Channel `accountLoggedIn`]
@@ -21,10 +21,7 @@ This is the backend repository for the NFT Marketplace.
 
 ### NFTs/Collections
 
-- Get All NFTs: `GET /api/nfts/all`
-- Get NFTs By Category: `GET /api/nfts/category/:category`
-- Get Transactions By NFT: `GET /api/nfts/:nftid/transactions`
-- Get NFTs By Collection: `GET /api/collections/:collectionsId`
+- Get All NFTs: `GET /api/nfts`
 - Mint an NFT: `POST /api/nfts/mint` [Socket IO Channel `nftMint`]
 - Buy an NFT: `POST /api/nfts/:nftid/buy` [Socket IO Channel `nftBuy`]
 - Sell an NFT: `POST /api/nfts/:nftid/sell` [Socket IO Channel `nftSell`]
@@ -32,9 +29,8 @@ This is the backend repository for the NFT Marketplace.
 
 ### User
 
-- Get NFTs By Owner: `GET /api/user/nfts`
-- Get Collections By Owner: `GET /api/user/collections`
-- Get Transactions By User: `GET /api/user/transactions`
+- Get Account: `GET /api/:username` [Returns public data of the user]
+
 
 ## Installation
 
