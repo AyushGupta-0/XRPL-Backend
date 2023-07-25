@@ -7,6 +7,11 @@ import dotenv from 'dotenv'
 dotenv.config()
 import linkSocketio from './api/v1/middlewares/linkSocketio';
 import apiRouter from './api/v1/routes/index'
+import passport from 'passport'
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import db from './api/v1/helpers/firebase';
+import { FirestoreStore } from '@google-cloud/connect-firestore';
 
 // App Config
 const app: Express = express()
@@ -24,9 +29,29 @@ app.use(cors({
     methods: ['GET', 'POST', 'PUT', 'DELETE']
 }))
 app.use(linkSocketio(io))
+app.use(cookieParser())
 app.use(helmet())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
+app.use(
+    session({
+        store: new FirestoreStore({
+            dataset: db,
+            kind: 'express-sessions',
+        }),
+        name: 'SESSION_COOKIE',
+        secret: 'my-secret',
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 3,
+            sameSite: false,
+            secure: true
+        }
+    })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 const PORT = process.env.SERVER_PORT || 5000
 
 // Router

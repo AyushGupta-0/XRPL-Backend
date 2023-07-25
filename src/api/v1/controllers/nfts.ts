@@ -29,7 +29,7 @@ export const getNFTDetails = (req: ApiRequest, res: Response) => {
 
 }
 
-export const createNFT = async (req: ApiRequest, res: Response) => {
+export const mintNFT = async (req: ApiRequest, res: Response) => {
     const uri = await uploadToIPFS(req.file?.buffer)
     const transaction: XummPostPayloadBodyJson = {
         txjson: {
@@ -42,7 +42,7 @@ export const createNFT = async (req: ApiRequest, res: Response) => {
     }
     const subscription: PayloadAndSubscription | undefined = await xumm.payload?.createAndSubscribe(transaction, async (event) => {
 		if(event.data.signed){
-            res.json({status: 'success', message: 'NFT created successfully'})
+            req.io?.emit('nftMinted', {status: 'success', message: 'NFT minted successfully'})
         }
     })
 	res.json({uuid: subscription?.created.uuid, url: `https://xumm.app/sign/${subscription?.created.uuid}`, wss: `wss://xumm.app/sign/${subscription?.created.uuid}`})
