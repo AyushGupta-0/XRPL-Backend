@@ -26,7 +26,8 @@ const io: Server = new Server(server, {
 app.use(cors({
     origin: '*',
     allowedHeaders: ['Content-Type', 'Authorization'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE']
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    credentials: true
 }))
 app.use(linkSocketio(io))
 app.use(cookieParser())
@@ -46,7 +47,7 @@ app.use(
         cookie: {
             maxAge: 1000 * 60 * 60 * 3,
             sameSite: false,
-            secure: true
+            // secure: true
         }
     })
 );

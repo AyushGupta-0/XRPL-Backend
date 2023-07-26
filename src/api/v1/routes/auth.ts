@@ -1,9 +1,8 @@
 import {Router} from 'express'
 import {createAccountWithXumm, loginAccountWithXumm, createAccountWithOAuth, loginAccountWithOAuth, getProfile} from '../controllers/auth'
-import checkAuthentication from '../middlewares/checkAuthentication'
 const router: Router = Router()
 
-router.get('/profile', checkAuthentication, getProfile)
+router.get('/profile', getProfile)
 
 router.get('/createAccountWithXumm', createAccountWithXumm)
 router.get('/loginAccountWithXumm', loginAccountWithXumm)
