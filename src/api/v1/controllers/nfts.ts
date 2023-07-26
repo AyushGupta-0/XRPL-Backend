@@ -41,9 +41,9 @@ export const mintNFT = async (req: ApiRequest, res: Response) => {
         user_token: req.user.xummToken
     }
     const subscription: PayloadAndSubscription | undefined = await xumm.payload?.createAndSubscribe(transaction, async (event) => {
-		if(event.data.signed){
+        if(event.data.signed){
             req.io?.emit('nftMinted', {status: 'success', message: 'NFT minted successfully'})
         }
     })
-	res.json({uuid: subscription?.created.uuid, url: `https://xumm.app/sign/${subscription?.created.uuid}`, wss: `wss://xumm.app/sign/${subscription?.created.uuid}`})
+    res.json({uuid: subscription?.created.uuid, url: `https://xumm.app/sign/${subscription?.created.uuid}`, wss: `wss://xumm.app/sign/${subscription?.created.uuid}`})
 }

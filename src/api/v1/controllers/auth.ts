@@ -70,11 +70,7 @@ export const loginAccountWithXumm = async (req: ApiRequest, res: Response) => {
 }
 
 export const getProfile = async (req: ApiRequest, res: Response) => {
-	if(req.user){
-		return res.json({status: 'success', data: req.user})
-	}else{
-		return res.status(401).json({status: 'failed', message: 'User not logged in'})
-	}
+	res.json({status: 'success', data: req.user})
 }
 
 export const createAccountWithOAuth = async (req: ApiRequest, res: Response) => {

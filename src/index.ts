@@ -7,7 +7,7 @@ import dotenv from 'dotenv'
 dotenv.config()
 import linkSocketio from './api/v1/middlewares/linkSocketio';
 import apiRouter from './api/v1/routes/index'
-import passport from 'passport'
+import passport from './api/v1/services/passport'
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import db from './api/v1/helpers/firebase';
