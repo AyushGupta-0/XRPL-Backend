@@ -24,9 +24,12 @@ router.post('/loginAccountWithOAuth', loginAccountWithOAuth)
 // @route     GET /api/auth/logout
 // @desc      Logout user and clear session cookie
 // @access    Public
-router.get('/logout', function(req, res, next) {
-    res.clearCookie('SESSION_COOKIE');
-    res.json({status: 'success', message: 'Logged out successfully'})
+router.get('/logout', function(req, res) {
+    req.session.destroy((err) => {
+        if(err) console.log(err)
+        res.clearCookie('SESSION_COOKIE');
+        res.redirect('http://localhost:3000/?logout=true')
+    })
 });
 
 
@@ -36,8 +39,8 @@ router.get('/logout', function(req, res, next) {
 // @access    Public
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get('/google/redirect', passport.authenticate('google', {
-    failureRedirect: '/api/auth/google/failed',
-    successRedirect: '/api/auth/google/success'
+    failureRedirect: 'http://localhost:3000/?success=false',
+    successRedirect: 'http://localhost:3000/?success=true'
 }));
 
 // @route     GET /api/auth/twitter
@@ -45,17 +48,17 @@ router.get('/google/redirect', passport.authenticate('google', {
 // @access    Public
 router.get('/twitter', passport.authenticate('twitter'));
 router.get('/twitter/redirect', passport.authenticate('twitter', {
-    failureRedirect: '/api/auth/twitter/failed',
-    successRedirect: '/api/auth/twitter/success'
+    failureRedirect: 'http://localhost:3000/?success=false',
+    successRedirect: 'http://localhost:3000/?success=true'
 }));
 
-// @route     GET /api/auth/google
-// @desc      OAuth screen for google
+// @route     GET /api/auth/discord
+// @desc      OAuth screen for discord
 // @access    Public
 router.get('/discord', passport.authenticate('discord', {scope: ['identify', 'email']}));
 router.get('/discord/redirect', passport.authenticate('discord', {
-    failureRedirect: '/api/auth/discord/failed',
-    successRedirect: '/api/auth/discord/success'
+    failureRedirect: 'http://localhost:3000/?success=false',
+    successRedirect: 'http://localhost:3000/?success=true'
 }));
 
 

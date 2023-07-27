@@ -24,8 +24,7 @@ const io: Server = new Server(server, {
 
 // Middlewares
 app.use(cors({
-    origin: '*',
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    origin: 'http://localhost:3000',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
 }))
@@ -47,6 +46,7 @@ app.use(
         cookie: {
             maxAge: 1000 * 60 * 60 * 3,
             sameSite: false,
+            httpOnly: true,
             // secure: true
         }
     })
