@@ -1,11 +1,25 @@
-import * as xrpl from "xrpl"
+import { Client, convertHexToString } from "xrpl"
+import { AccountNFToken } from 'xrpl/dist/npm/models/methods/accountNFTs'
 
 const net: string = "wss://testnet.xrpl-labs.com"
 
-export const client: xrpl.Client = new xrpl.Client(net)
+const xrpl: Client = new Client(net)
 
 export const fetchBalance = async (address: string) => {
-    await client.connect()
-    const balance: string = await client.getXrpBalance(address)
+    await xrpl.connect()
+    const balance: string = await xrpl.getXrpBalance(address)
     return balance
+}
+
+export const fetchNFTs = async (address: string) => {
+    await xrpl.connect()
+    const nfts = (await xrpl.request({
+        "command": "account_nfts",
+        "account": address,
+        "ledger_index": "validated"
+    })).result.account_nfts
+    nfts.forEach(async (nft: AccountNFToken) => {
+        nft.URI = convertHexToString(nft.URI as string)
+    })
+    return nfts;
 }

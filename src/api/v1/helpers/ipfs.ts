@@ -12,8 +12,7 @@ const ipfs: IPFSHTTPClient = create({
 });
 
 const uploadToIPFS = async (data: any) => {
-  const buff = Buffer.from(data)
-  const result = await ipfs.add(buff)
+  const result = await ipfs.add(data)
   return result.path
 }
 

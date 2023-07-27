@@ -17,7 +17,7 @@ export const createAccountWithXumm = async (req: ApiRequest, res: Response) => {
 	}
 	const subscription: PayloadAndSubscription | undefined = await xumm.payload?.createAndSubscribe(transaction, async (event) => {
 		if(event.data.signed){
-			const payload = await xumm.payload?.get(event.data.payload_uuidv4, true)				
+			const payload = await xumm.payload?.get(event.data.payload_uuidv4, true)
 			const userRef = db.collection('users').doc(payload?.response.account as string)
 			let userDoc = await userRef.get()
 			if(userDoc.exists && userDoc.data()?.provider === 'xumm'){
@@ -70,7 +70,7 @@ export const loginAccountWithXumm = async (req: ApiRequest, res: Response) => {
 }
 
 export const getProfile = async (req: ApiRequest, res: Response) => {
-	res.status(200).json(req.user)
+	res.json({status: 'success', data: req.user})
 }
 
 export const createAccountWithOAuth = async (req: ApiRequest, res: Response) => {

@@ -5,8 +5,8 @@ export default interface User{
     name: string;
     email?: string;
     bio?: string;
-    defaultWallet: string;
-    xummToken: string;
+    defaultWallet?: string;
+    xummToken?: string;
     profilePicture?: string;
     provider: string;
     createdAt: EpochTimeStamp;
