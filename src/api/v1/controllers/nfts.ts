@@ -7,6 +7,9 @@ import ApiRequest from '../interfaces/ApiRequest'
 import { PayloadAndSubscription, XummPostPayloadBodyJson } from 'xumm-sdk/dist/src/types'
 import {convertStringToHex} from 'xrpl'
 
+
+// Get list of all Listed/Minted NFTs
+// TODO: Add pagination, sorting, filtering
 export const getAllNFTs = (req: ApiRequest, res: Response) => {
     db.collection('nfts').onSnapshot(snapshot => {
         let resData = snapshot.docs.map(doc => {
@@ -16,19 +19,26 @@ export const getAllNFTs = (req: ApiRequest, res: Response) => {
     })
 }
 
+
+// Get list of NFTs of a particular account from XRPL
+// TODO: Change to our platform username, and platform specific NFTs rather than XRPL NFTs
 export const getAccountNFTs = async (req: ApiRequest, res: Response) => {
     if((await db.collection('users').doc(req.params.account).get()).exists){
-        const nfts = (await fetchNFTs(req.params.account))
+        const nfts = await fetchNFTs(req.params.account)
         res.status(200).json({status: 'success', nfts})
     }else{
         res.status(404).json({status: 'failed', message: 'Account not found'})
     }
 }
 
+
+// TODO: Get details of a particular NFT
 export const getNFTDetails = (req: ApiRequest, res: Response) => {
 
 }
 
+
+// Mint a new NFT
 export const mintNFT = async (req: ApiRequest, res: Response) => {
     const uri = await uploadToIPFS(req.file?.buffer)
     const transaction: XummPostPayloadBodyJson = {

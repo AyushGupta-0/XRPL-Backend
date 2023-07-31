@@ -5,12 +5,13 @@ const net: string = "wss://testnet.xrpl-labs.com"
 
 const xrpl: Client = new Client(net)
 
+// Utility function to fetch balance of an account from XRPL
 export const fetchBalance = async (address: string) => {
     await xrpl.connect()
     const balance: string = await xrpl.getXrpBalance(address)
     return balance
 }
-
+// Utility function to fetch NFTs of an account from XRPL
 export const fetchNFTs = async (address: string) => {
     await xrpl.connect()
     const nfts = (await xrpl.request({

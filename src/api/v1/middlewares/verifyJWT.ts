@@ -3,6 +3,7 @@ import db from '../helpers/firebase'
 import jwt from "jsonwebtoken";
 import ApiRequest from '../interfaces/ApiRequest';
 
+// Middleware to verify JWT token (might not be needed as we are using express-session)
 const verifyToken = (req: ApiRequest, res: Response, next: NextFunction) => {
     const bearerHeader = req.headers["authorization"];
     if (typeof bearerHeader !== "undefined") {

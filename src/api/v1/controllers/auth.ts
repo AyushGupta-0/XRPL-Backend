@@ -9,6 +9,8 @@ import {XummPostPayloadBodyJson} from 'xumm-sdk/dist/src/types/xumm-api/index'
 import {PayloadAndSubscription} from 'xumm-sdk/dist/src/types/Payload/PayloadAndSubscription'
 import {v4} from 'uuid'
 
+
+// Controller for creating account using Xumm (Anonymous User) 
 export const createAccountWithXumm = async (req: ApiRequest, res: Response) => {
 	const transaction: XummPostPayloadBodyJson = {
 		txjson: {
@@ -26,7 +28,7 @@ export const createAccountWithXumm = async (req: ApiRequest, res: Response) => {
 				req.io?.emit('accountCreated', {status: 'failed', provider: userDoc.data()?.provider, message: 'Account already exists but not created with Xumm'})
 			}else{
 				let user: User = {
-					name: `user_${v4()}`,
+					username: `user_${v4()}`,
 					defaultWallet: payload?.response.account as string,
 					createdAt: Date.now(),
 					updatedAt: Date.now(),
@@ -44,6 +46,8 @@ export const createAccountWithXumm = async (req: ApiRequest, res: Response) => {
 	res.json({uuid: subscription?.created.uuid, url: `https://xumm.app/sign/${subscription?.created.uuid}`, wss: `wss://xumm.app/sign/${subscription?.created.uuid}`})
 }
 
+
+// Controller for logging into account using Xumm (Anonymous User)
 export const loginAccountWithXumm = async (req: ApiRequest, res: Response) => {
 	const transaction: XummPostPayloadBodyJson = {
 		txjson: {
@@ -69,14 +73,14 @@ export const loginAccountWithXumm = async (req: ApiRequest, res: Response) => {
 	res.json({uuid: subscription?.created.uuid, url: `https://xumm.app/sign/${subscription?.created.uuid}`, wss: `wss://xumm.app/sign/${subscription?.created.uuid}`})
 }
 
+
+// Returns state of the user (logged in or not)
 export const getProfile = async (req: ApiRequest, res: Response) => {
 	res.json({status: 'success', data: req.user})
 }
 
+
+// TODO: Create account after OAuth login to store user data (username, bio, etc.)
 export const createAccountWithOAuth = async (req: ApiRequest, res: Response) => {
 
-}
-
-export const loginAccountWithOAuth = async (req: ApiRequest, res: Response) => {
-		
 }

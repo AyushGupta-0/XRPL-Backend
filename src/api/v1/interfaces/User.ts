@@ -2,7 +2,7 @@ import NFT from './NFT';
 
 // TODO: Collections will be added later
 export default interface User{
-    name: string;
+    username?: string;
     email?: string;
     bio?: string;
     defaultWallet?: string;
