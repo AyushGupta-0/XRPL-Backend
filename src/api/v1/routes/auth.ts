@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import {createAccountWithXumm, loginAccountWithXumm, createAccountWithOAuth, loginAccountWithOAuth, getProfile} from '../controllers/auth'
+import {createAccountWithXumm, loginAccountWithXumm, createAccountWithOAuth, getProfile} from '../controllers/auth'
 import checkAuthentication from '../middlewares/checkAuthentication'
 import passport from '../services/passport'
 const router: Router = Router()
@@ -12,13 +12,12 @@ const router: Router = Router()
 router.get('/profile', checkAuthentication, getProfile)
 
 
-// Need to integrate this with express-sessions
+// TODO: Need to integrate this with express-sessions
 router.get('/createAccountWithXumm', createAccountWithXumm)
 router.get('/loginAccountWithXumm', loginAccountWithXumm)
 
-// Post form after OAuth completion
-router.post('/createAccountWithOAuth', createAccountWithOAuth)
-router.post('/loginAccountWithOAuth', loginAccountWithOAuth)
+// TODO: Post form after OAuth completion for the first time
+router.post('/createAccountWithOAuth', checkAuthentication, createAccountWithOAuth)
 
 
 // @route     GET /api/auth/logout
@@ -28,7 +27,7 @@ router.get('/logout', function(req, res) {
     req.session.destroy((err) => {
         if(err) console.log(err)
         res.clearCookie('SESSION_COOKIE');
-        res.redirect('http://localhost:3000/?logout=true')
+        res.redirect(`${process.env.CLIENT_URL}/?logout=true`)
     })
 });
 
@@ -39,8 +38,8 @@ router.get('/logout', function(req, res) {
 // @access    Public
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
 router.get('/google/redirect', passport.authenticate('google', {
-    failureRedirect: 'http://localhost:3000/?success=false',
-    successRedirect: 'http://localhost:3000/?success=true'
+    failureRedirect: `${process.env.CLIENT_URL}/?success=false`,
+    successRedirect: `${process.env.CLIENT_URL}/?success=true`
 }));
 
 // @route     GET /api/auth/twitter
@@ -48,8 +47,8 @@ router.get('/google/redirect', passport.authenticate('google', {
 // @access    Public
 router.get('/twitter', passport.authenticate('twitter'));
 router.get('/twitter/redirect', passport.authenticate('twitter', {
-    failureRedirect: 'http://localhost:3000/?success=false',
-    successRedirect: 'http://localhost:3000/?success=true'
+    failureRedirect: `${process.env.CLIENT_URL}/?success=false`,
+    successRedirect: `${process.env.CLIENT_URL}/?success=true`
 }));
 
 // @route     GET /api/auth/discord
@@ -57,8 +56,8 @@ router.get('/twitter/redirect', passport.authenticate('twitter', {
 // @access    Public
 router.get('/discord', passport.authenticate('discord', {scope: ['identify', 'email']}));
 router.get('/discord/redirect', passport.authenticate('discord', {
-    failureRedirect: 'http://localhost:3000/?success=false',
-    successRedirect: 'http://localhost:3000/?success=true'
+    failureRedirect: `${process.env.CLIENT_URL}/?success=false`,
+    successRedirect: `${process.env.CLIENT_URL}/?success=true`
 }));
 
 
@@ -66,23 +65,23 @@ router.get('/discord/redirect', passport.authenticate('discord', {
 
 
 // These routes below will be removed and redirects above would be changed to the frontend
-router.get('/google/success', (req, res) => {
-    res.json({session: req.session, id: req.sessionID, user: req.user})
-})
-router.get('/google/failed', (req, res) => {
-    res.json({session: req.session, id: req.sessionID, user: req.user})
-})
-router.get('/twitter/success', (req, res) => {
-    res.json({session: req.session, id: req.sessionID, user: req.user})
-})
-router.get('/twitter/failed', (req, res) => {
-    res.json({session: req.session, id: req.sessionID, user: req.user})
-})
-router.get('/discord/success', (req, res) => {
-    res.json({session: req.session, id: req.sessionID, user: req.user})
-})
-router.get('/discord/failed', (req, res) => {
-    res.json({session: req.session, id: req.sessionID, user: req.user})
-})
+// router.get('/google/success', (req, res) => {
+//     res.json({session: req.session, id: req.sessionID, user: req.user})
+// })
+// router.get('/google/failed', (req, res) => {
+//     res.json({session: req.session, id: req.sessionID, user: req.user})
+// })
+// router.get('/twitter/success', (req, res) => {
+//     res.json({session: req.session, id: req.sessionID, user: req.user})
+// })
+// router.get('/twitter/failed', (req, res) => {
+//     res.json({session: req.session, id: req.sessionID, user: req.user})
+// })
+// router.get('/discord/success', (req, res) => {
+//     res.json({session: req.session, id: req.sessionID, user: req.user})
+// })
+// router.get('/discord/failed', (req, res) => {
+//     res.json({session: req.session, id: req.sessionID, user: req.user})
+// })
 
 export default router

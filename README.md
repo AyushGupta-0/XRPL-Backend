@@ -8,28 +8,32 @@ This is the backend repository for the NFT Marketplace.
 
 ### Authentication
 
-- Get Account Data: `GET /api/auth/profile` [Set 'authorization' header as 'Bearer <token>']
+- Get Current User Data: `GET /api/auth/profile` [Session cookie need to be present on the client set by OAuth]
 
 - Create Account With Xumm (Anonymous User): `GET /api/auth/createAccountWithXumm` [Socket IO Channel `accountCreated`]
 - Login Account With Xumm (Anonymous User): `GET /api/auth/loginAccountWithXumm` [Socket IO Channel `accountLoggedIn`]
 
-- Create Account With OAuth (Authenticated User): `POST /api/auth/createAccountWithOAuth`
-- Login Account With OAuth (Authenticated User): `POST /api/auth/loginAccountWithOAuth`
+- Google OAuth Screen: `GET /api/auth/google`
+- Google OAuth Callback: `GET /api/auth/google/callback`
+- Twitter OAuth Screen: `GET /api/auth/twitter`
+- Twitter OAuth Callback: `GET /api/auth/twitter/callback`
+- Discord OAuth Screen: `GET /api/auth/discord`
+- Discord OAuth Callback: `GET /api/auth/discord/callback`
+
+- Account Completion After OAuth (Authenticated User): `POST /api/auth/createAccountWithOAuth` [Socket IO Channel `accountCreated`] (TODO)
 
 - Create Account With Passkey (Authenticated User): `POST /api/auth/createAccountWithPasskey`
 - Login Account With Passkey (Authenticated User): `POST /api/auth/loginAccountWithPasskey`
 
 ### NFTs/Collections
 
-- Get All NFTs: `GET /api/nfts`
+- Get List of All NFTs: `GET /api/nfts`
 - Mint an NFT: `POST /api/nfts/mint` [Socket IO Channel `nftMint`]
-- Buy an NFT: `POST /api/nfts/:nftid/buy` [Socket IO Channel `nftBuy`]
-- Sell an NFT: `POST /api/nfts/:nftid/sell` [Socket IO Channel `nftSell`]
-- Transfer an NFT: `POST /api/nfts/:nftid/transfer` [Socket IO Channel `nftTransfer`]
+- Get NFTs of a User: `GET /api/nfts/:username` [Returns NFTs of the user based on account address, to be changed to username]
 
 ### User
 
-- Get Account: `GET /api/:username` [Returns public data of the user]
+- Get Account: `GET /api/:username` [Returns public data of the user] (TODO)
 
 
 ## Installation
@@ -47,11 +51,15 @@ cp .env.example .env
 
 ### Get Firebase Service Account Key
 ```
-# Place this in the project root directory
-touch serviceAccountKey.json
+# Place this in the config directory
+touch ./src/config/serviceAccountKey.json
 ```
 
 ### Run in dev mode
 ```
+npm run dev
+
+# If there is an error, create build and run again
+npm run build
 npm run dev
 ```

@@ -4,11 +4,13 @@ import passportTwitter from 'passport-twitter';
 import passportDiscord from 'passport-discord'
 import db from '../helpers/firebase';
 
+// New passport instance and strategies
 const passport = new Passport();
 const GoogleStrategy = passportGoogle.Strategy;
 const TwitterStrategy = passportTwitter.Strategy;
 const DiscordStrategy = passportDiscord.Strategy;
 
+// Serialize and deserialize user
 passport.serializeUser(function(doc:any, cb) {
     process.nextTick(function() {
         return cb(null, doc.id);
@@ -25,10 +27,11 @@ passport.deserializeUser(function(id: string, cb) {
     });
 });
 
+// Google Strategy
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID as string,
     clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-    callbackURL: 'http://localhost:5000/api/auth/google/redirect',
+    callbackURL: '/api/auth/google/redirect',
 }, (accessToken, refreshToken, profile: any, done) => {
     db.collection('users').where('email', "==", profile.emails[0].value).get().then(async (snapshot) => {
         if (snapshot.empty) {
@@ -56,10 +59,11 @@ passport.use(new GoogleStrategy({
     });
 }));
 
+// Twitter Strategy
 passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY as string,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET as string,
-    callbackURL: 'http://localhost:5000/api/auth/twitter/redirect',
+    callbackURL: '/api/auth/twitter/redirect',
     includeEmail: true
 }, (accessToken, refreshToken, profile: any, done) => {
     db.collection('users').where('email', "==", profile.emails[0].value).get().then(async (snapshot) => {
@@ -89,10 +93,11 @@ passport.use(new TwitterStrategy({
     });
 }));
 
+// Discord Strategy
 passport.use(new DiscordStrategy({
     clientID: process.env.DISCORD_CLIENT_ID as string,
     clientSecret: process.env.DISCORD_CLIENT_SECRET as string,
-    callbackURL: 'http://localhost:5000/api/auth/discord/redirect',
+    callbackURL: '/api/auth/discord/redirect',
 }, (accessToken, refreshToken, profile: any, done: any) => {
     db.collection('users').where('email', "==", profile.email).get().then(async (snapshot) => {
         if (snapshot.empty) {

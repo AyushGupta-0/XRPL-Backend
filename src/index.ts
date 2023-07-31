@@ -1,10 +1,10 @@
+import dotenv from 'dotenv'
+dotenv.config()
 import express, {Express} from 'express'
 import cors from 'cors'
 import helmet from 'helmet'
 import { createServer } from "http";
 import { Server } from "socket.io";
-import dotenv from 'dotenv'
-dotenv.config()
 import linkSocketio from './api/v1/middlewares/linkSocketio';
 import apiRouter from './api/v1/routes/index'
 import passport from './api/v1/services/passport'
@@ -16,6 +16,7 @@ import { FirestoreStore } from '@google-cloud/connect-firestore';
 // App Config
 const app: Express = express()
 const server = createServer(app)
+const PORT = process.env.SERVER_PORT || 5000
 const io: Server = new Server(server, {
     cors: {
         origin: '*',
@@ -53,7 +54,6 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
-const PORT = process.env.SERVER_PORT || 5000
 
 // Router
 app.use('/api', apiRouter)
