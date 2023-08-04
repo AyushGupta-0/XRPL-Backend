@@ -10,23 +10,6 @@ const GoogleStrategy = passportGoogle.Strategy;
 const TwitterStrategy = passportTwitter.Strategy;
 const DiscordStrategy = passportDiscord.Strategy;
 
-// Serialize and deserialize user
-passport.serializeUser(function(doc:any, cb) {
-    process.nextTick(function() {
-        return cb(null, doc.id);
-    });
-});
-  
-passport.deserializeUser(function(id: string, cb) {
-    process.nextTick(function() {
-        db.collection('users').doc(id).get().then((doc) => {
-            return cb(null, {id, ...doc.data()});
-        }).catch(err => {
-            return cb(err, false)
-        })
-    });
-});
-
 // Google Strategy
 passport.use(new GoogleStrategy({
     clientID: process.env.GOOGLE_CLIENT_ID as string,
@@ -64,7 +47,7 @@ passport.use(new TwitterStrategy({
     consumerKey: process.env.TWITTER_CONSUMER_KEY as string,
     consumerSecret: process.env.TWITTER_CONSUMER_SECRET as string,
     callbackURL: '/api/auth/twitter/redirect',
-    includeEmail: true
+    includeEmail: true,
 }, (accessToken, refreshToken, profile: any, done) => {
     db.collection('users').where('email', "==", profile.emails[0].value).get().then(async (snapshot) => {
         if (snapshot.empty) {
