@@ -10,8 +10,8 @@ This is the backend repository for the NFT Marketplace.
 
 - Get Current User Data: `GET /api/auth/profile` [Session cookie need to be present on the client set by OAuth]
 
-- Create Account With Xumm (Anonymous User): `GET /api/auth/createAccountWithXumm` [Socket IO Channel `accountCreated`]
-- Login Account With Xumm (Anonymous User): `GET /api/auth/loginAccountWithXumm` [Socket IO Channel `accountLoggedIn`]
+- Create or Log into Account With Xumm (Anonymous User): `GET /api/auth/xumm` [Socket IO Channel `accountCreated`]
+<!-- - Login Account With Xumm (Anonymous User): `GET /api/auth/loginAccountWithXumm` [Socket IO Channel `accountLoggedIn`] -->
 
 - Google OAuth Screen: `GET /api/auth/google`
 - Google OAuth Callback: `GET /api/auth/google/callback`
@@ -20,7 +20,7 @@ This is the backend repository for the NFT Marketplace.
 - Discord OAuth Screen: `GET /api/auth/discord`
 - Discord OAuth Callback: `GET /api/auth/discord/callback`
 
-- Account Completion After OAuth (Authenticated User): `POST /api/auth/createAccountWithOAuth` [Socket IO Channel `accountCreated`] (TODO)
+- Account Completion After OAuth (Authenticated User): `POST /api/auth/createAccountAfterOAuth` [Socket IO Channel `accountCreated`] (TODO)
 
 - Create Account With Passkey (Authenticated User): `POST /api/auth/createAccountWithPasskey`
 - Login Account With Passkey (Authenticated User): `POST /api/auth/loginAccountWithPasskey`

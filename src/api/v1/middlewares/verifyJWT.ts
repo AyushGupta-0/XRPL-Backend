@@ -3,7 +3,7 @@ import db from '../helpers/firebase'
 import jwt from "jsonwebtoken";
 import ApiRequest from '../interfaces/ApiRequest';
 
-// Middleware to verify JWT token (might not be needed as we are using express-session)
+// Middleware to verify JWT token
 const verifyToken = (req: ApiRequest, res: Response, next: NextFunction) => {
     const bearerHeader = req.headers["authorization"];
     if (typeof bearerHeader !== "undefined") {
@@ -16,10 +16,16 @@ const verifyToken = (req: ApiRequest, res: Response, next: NextFunction) => {
         req.token = bearerToken;
         try{
             const authData = jwt.verify(req.token, process.env.SECRET as string);
+            console.log(authData)
             db.collection('users').doc(authData as string).get().then((doc) => {
-                if(doc.exists){
+                if(doc.exists && doc.data()?.defaultWallet){
                     req.user = {id: doc.id, ...doc.data()}
                     next()
+                }else if(doc.exists){
+                    return res.status(422).json({
+                        status: 'failed',
+                        msg: 'Link a defaultWallet to your account first'
+                    })
                 }else{
                     return res.status(404).json({
                         status: "failed",
