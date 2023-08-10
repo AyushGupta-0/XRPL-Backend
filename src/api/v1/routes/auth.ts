@@ -33,9 +33,9 @@ router.get('/google/redirect', passport.authenticate('google', {
 }), (req: ApiRequest, res) => {
     const token = generateToken(req.user.id)
     if(req.user.defaultWallet){
-        res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=dashboard`)
+        return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=dashboard`)
     }
-    res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
+    return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
 });
 
 // @route     GET /api/auth/twitter
@@ -48,9 +48,9 @@ router.get('/twitter/redirect', passport.authenticate('twitter', {
 }), (req: ApiRequest, res) => {
     const token = generateToken(req.user.id)
     if(req.user.defaultWallet){
-        res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=dashboard`)
+        return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=dashboard`)
     }
-    res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
+    return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
 });
 
 // @route     GET /api/auth/discord
@@ -63,9 +63,9 @@ router.get('/discord/redirect', passport.authenticate('discord', {
 }), (req: ApiRequest, res) => {
     const token = generateToken(req.user.id)
     if(req.user.defaultWallet){
-        res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=dashboard`)
+        return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=dashboard`)
     }
-    res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
+    return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
 });
 
 

@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { getAllNFTs, getAccountNFTs, getNFTDetails, mintNFT, listNFT, buyNFT } from '../controllers/nfts'
+import { getAllNFTs, getAccountNFTs, getNFTDetails, mintNFT, transferNFT, receiveNFT, listNFT, cancelNFT, buyNFT } from '../controllers/nfts'
 import multer, {Multer} from 'multer'
 import verifyToken from '../middlewares/verifyJWT'
 const router: Router = Router()
@@ -21,20 +21,35 @@ router.post('/mint', verifyToken, upload.single('nftFile'), mintNFT)
 // @access    Public
 router.get('/:account', getAccountNFTs)
 
-// @route     GET /api/nfts/:nftid
-// @desc      Get a specific NFT details
+// @route     GET /api/nfts/nft/:nftid
+// @desc      Get a specific NFT details and list of offers
 // @access    Public
-router.get('/:nftid', getNFTDetails)
+router.get('/nft/:nftId', getNFTDetails)
 
-// @route     POST /api/nfts/list
-// @desc      Create a sell offer for an NFT
-// @access    Public
+// @route     POST /api/nfts/transfer
+// @desc      Create a transfer offer for an NFT (transfer)
+// @access    Private
+router.post('/transfer', verifyToken, transferNFT)
+
+// @route     POST /api/nfts/receive
+// @desc      Accept a transfer offer for an NFT (transfer)
+// @access    Private
+router.post('/receive', verifyToken, receiveNFT)
+
+// @route     POST /api/nfts/sell
+// @desc      List an NFT (directSale/auction)
+// @access    Private
 router.post('/list', verifyToken, listNFT)
 
 // @route     POST /api/nfts/buy
-// @desc      Accept a sell offer for an NFT
-// @access    Public
+// @desc      Make a buy offer to an NFT for sale (directSale)
+// @access    Private
 router.post('/buy', verifyToken, buyNFT)
+
+// @route     POST /api/nfts/cancel
+// @desc      Cancel a transfer/sell/buy offer for an NFT (transfer, list)
+// @access    Private
+router.post('/cancel', verifyToken, cancelNFT)
 
 
 export default router
