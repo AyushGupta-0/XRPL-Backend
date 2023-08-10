@@ -37,7 +37,7 @@ export const fetchTransaction = async (txid: string) => {
     return transaction
 }
 
-// Utility function to set minter of an account on XRPL
+// Utility function to set the user as a minter on our platform
 export const setMinter = async (user: string) => {
     await xrpl.connect()
     const platformWallet = Wallet.fromSeed(process.env.PLATFORM_XRP_SECRET as string)
@@ -50,4 +50,33 @@ export const setMinter = async (user: string) => {
     const prepared = await xrpl.autofill(tx_json)
     const signed = platformWallet.sign(prepared)
     const transaction = await xrpl.submitAndWait(signed.tx_blob)
+}
+
+// Utility function to remove the minter
+export const removeMinter = async () => {
+    await xrpl.connect()
+    const platformWallet = Wallet.fromSeed(process.env.PLATFORM_XRP_SECRET as string)
+    const tx_json: Transaction = {
+        TransactionType: "AccountSet",
+        Account: process.env.PLATFORM_XRP_ACCOUNT as string,
+        ClearFlag: AccountSetAsfFlags.asfAuthorizedNFTokenMinter
+    }
+    const prepared = await xrpl.autofill(tx_json)
+    const signed = platformWallet.sign(prepared)
+    const transaction = await xrpl.submitAndWait(signed.tx_blob)
+}
+
+// Utility function to accept a buy and sell offer
+export const acceptOffer = async (buyOffer: string, sellOffer: string) => {
+    await xrpl.connect()
+    const platformWallet = Wallet.fromSeed(process.env.PLATFORM_XRP_SECRET as string)
+    const tx_json: Transaction = {
+        TransactionType: "NFTokenAcceptOffer",
+        Account: process.env.PLATFORM_XRP_ACCOUNT as string,
+        NFTokenBuyOffer: buyOffer,
+        NFTokenSellOffer: sellOffer,
+        NFTokenBrokerFee: "10"
+    }
+    const transaction = await xrpl.submitAndWait(tx_json, {wallet: platformWallet})
+    console.log(transaction)
 }
