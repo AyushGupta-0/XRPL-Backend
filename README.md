@@ -8,32 +8,32 @@ This is the backend repository for the NFT Marketplace.
 
 ### Authentication
 
-- Get Current User Data: `GET /api/auth/profile` [Session cookie need to be present on the client set by OAuth]
+- Get Current User Data: `GET /v1/auth/profile` [Session cookie need to be present on the client set by OAuth]
 
-- Create or Log into Account With Xumm (Anonymous User): `GET /api/auth/xumm` [Socket IO Channel `accountCreated`]
-<!-- - Login Account With Xumm (Anonymous User): `GET /api/auth/loginAccountWithXumm` [Socket IO Channel `accountLoggedIn`] -->
+- Create or Log into Account With Xumm (Anonymous User): `GET /v1/auth/xumm` [Socket IO Channel `accountCreated`]
+<!-- - Login Account With Xumm (Anonymous User): `GET /v1/auth/loginAccountWithXumm` [Socket IO Channel `accountLoggedIn`] -->
 
-- Google OAuth Screen: `GET /api/auth/google`
-- Google OAuth Callback: `GET /api/auth/google/callback`
-- Twitter OAuth Screen: `GET /api/auth/twitter`
-- Twitter OAuth Callback: `GET /api/auth/twitter/callback`
-- Discord OAuth Screen: `GET /api/auth/discord`
-- Discord OAuth Callback: `GET /api/auth/discord/callback`
+- Google OAuth Screen: `GET /v1/auth/google`
+- Google OAuth Callback: `GET /v1/auth/google/callback`
+- Twitter OAuth Screen: `GET /v1/auth/twitter`
+- Twitter OAuth Callback: `GET /v1/auth/twitter/callback`
+- Discord OAuth Screen: `GET /v1/auth/discord`
+- Discord OAuth Callback: `GET /v1/auth/discord/callback`
 
-- Account Completion After OAuth (Authenticated User): `POST /api/auth/createAccountAfterOAuth` [Socket IO Channel `accountCreated`] (TODO)
+- Account Completion After OAuth (Authenticated User): `POST /v1/auth/oauth/xumm` [Socket IO Channel `accountCreated`]
 
-- Create Account With Passkey (Authenticated User): `POST /api/auth/createAccountWithPasskey`
-- Login Account With Passkey (Authenticated User): `POST /api/auth/loginAccountWithPasskey`
+- Create Account With Passkey (Authenticated User): `POST /v1/auth/createAccountWithPasskey`
+- Login Account With Passkey (Authenticated User): `POST /v1/auth/loginAccountWithPasskey`
 
 ### NFTs/Collections
 
-- Get List of All NFTs: `GET /api/nfts`
-- Mint an NFT: `POST /api/nfts/mint` [Socket IO Channel `nftMint`]
-- Get NFTs of a User: `GET /api/nfts/:username` [Returns NFTs of the user based on account address, to be changed to username]
+- Get List of All NFTs: `GET /v1/nfts`
+- Mint an NFT: `POST /v1/nfts/mint` [Socket IO Channel `nftMint`]
+- Get NFTs of a User: `GET /v1/nfts/:username` [Returns NFTs of the user based on account address, to be changed to username]
 
 ### User
 
-- Get Account: `GET /api/:username` [Returns public data of the user] (TODO)
+- Get Account: `GET /v1/:username` [Returns public data of the user] (TODO)
 
 
 ## Installation

@@ -6,7 +6,7 @@ import helmet from 'helmet'
 import { createServer } from "http";
 import { Server, Socket } from "socket.io";
 import linkSocketio from './api/v1/middlewares/linkSocketio';
-import apiRouter from './api/v1/routes/index'
+import v1Router from './api/v1/routes/index'
 import passport from './api/v1/services/passport'
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
@@ -48,6 +48,6 @@ app.use(sessionMiddleware);
 
 
 // Router
-app.use('/api', apiRouter)
+app.use('/v1', v1Router)
 
 server.listen(PORT, () => console.log(`Server started on port ${PORT}.`))
