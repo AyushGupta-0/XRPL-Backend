@@ -20,7 +20,7 @@ This is the backend repository for the NFT Marketplace.
 - Discord OAuth Screen: `GET /v1/auth/discord`
 - Discord OAuth Callback: `GET /v1/auth/discord/callback`
 
-- Account Completion After OAuth (Authenticated User): `POST /v1/auth/oauth/xumm` [Socket IO Channel `accountCreated`]
+- Update Account After OAuth (Authenticated User): `PUT /v1/auth/oauth/` [Socket IO Channel `accountCreated`]
 
 - Create Account With Passkey (Authenticated User): `POST /v1/auth/createAccountWithPasskey`
 - Login Account With Passkey (Authenticated User): `POST /v1/auth/loginAccountWithPasskey`

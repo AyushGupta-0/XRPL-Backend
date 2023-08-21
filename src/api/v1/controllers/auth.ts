@@ -72,8 +72,8 @@ export const getProfile = async (req: ApiRequest, res: Response) => {
 }
 
 
-// TODO: Create account after OAuth login to store user data (username, bio, etc.)
-export const createAccountAfterOAuth = async (req: ApiRequest, res: Response) => {
+// TODO: Update account after OAuth login to store user data (username, bio, etc.)
+export const updateOAuthAccount = async (req: ApiRequest, res: Response) => {
 	if(req.user.provider === 'xumm'){
 		res.json({status: 'failed', message: 'Account already exists'})
 	}else{
@@ -86,20 +86,40 @@ export const createAccountAfterOAuth = async (req: ApiRequest, res: Response) =>
 			if(event.data.signed){
 				const payload = await xumm.payload?.get(event.data.payload_uuidv4, true)
 				const user = await db.collection('users').doc(req.user.id).get()
-				await user.ref.update({
-					updatedAt: Date.now(),
-					defaultWallet: payload?.response.account as string,
-					xummToken: payload?.application.issued_user_token as string,
-					username: req.body.username ? req.body.username : user.data()?.username ? user.data()?.username : `user_${v4()}`
-				})
-				const balance = await fetchBalance(payload?.response.account as string)
-				user.ref.get().then((doc) => {
-					req.io?.emit('accountCreated', {
-						status: 'success',
-						provider: doc.data()?.provider,
-						user: {id: doc.id, ...doc.data()},
-						balance,
-					})
+				db.collection('users').where('username', '==' , req.body.username).get().then(async (query) => {
+					if(query.docs.length > 0){						
+						await user.ref.update({
+							updatedAt: Date.now(),
+							defaultWallet: payload?.response.account as string,
+							xummToken: payload?.application.issued_user_token as string,
+							username: user.data()?.username ? user.data()?.username : `user_${v4()}`
+						})
+						const balance = await fetchBalance(payload?.response.account as string)
+						user.ref.get().then((doc) => {
+							req.io?.emit('accountCreated', {
+								status: 'success',
+								provider: doc.data()?.provider,
+								user: {id: doc.id, ...doc.data()},
+								balance,
+							})
+						})
+					}else{
+						await user.ref.update({
+							updatedAt: Date.now(),
+							defaultWallet: payload?.response.account as string,
+							xummToken: payload?.application.issued_user_token as string,
+							username: req.body.username ? req.body.username : user.data()?.username ? user.data()?.username : `user_${v4()}`
+						})
+						const balance = await fetchBalance(payload?.response.account as string)
+						user.ref.get().then((doc) => {
+							req.io?.emit('accountCreated', {
+								status: 'success',
+								provider: doc.data()?.provider,
+								user: {id: doc.id, ...doc.data()},
+								balance,
+							})
+						})
+					}
 				})
 			}
 		})

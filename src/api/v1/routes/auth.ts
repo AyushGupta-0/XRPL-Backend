@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import {createOrLoginXumm, createAccountAfterOAuth, getProfile} from '../controllers/auth'
+import {createOrLoginXumm, updateOAuthAccount, getProfile} from '../controllers/auth'
 // import checkAuthentication from '../middlewares/checkAuthentication'
 import passport from '../services/passport'
 import ApiRequest from '../interfaces/ApiRequest'
@@ -13,10 +13,10 @@ const router: Router = Router()
 // @access    Public
 router.get('/xumm', createOrLoginXumm)
 
-// @route     GET /v1/auth/createAccountAfterOAuth
+// @route     PUT /v1/auth/oauth
 // @desc      Update account details after OAuth
 // @access    Restricted (Only for users who have logged in with OAuth)
-router.post('/oauth/xumm', verifyAccount, createAccountAfterOAuth)
+router.put('/oauth', verifyAccount, updateOAuthAccount)
 
 // @route     GET /v1/auth/profile
 // @desc      Get user profile details
