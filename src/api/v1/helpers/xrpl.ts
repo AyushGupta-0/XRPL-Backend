@@ -1,7 +1,7 @@
 import { Wallet, Client, convertHexToString, AccountSetAsfFlags, Transaction } from "xrpl"
 import { AccountNFToken } from 'xrpl/dist/npm/models/methods/accountNFTs'
 
-const net: string = "wss://testnet.xrpl-labs.com"
+const net: string = "wss://s.altnet.rippletest.net:51233"
 
 const xrpl: Client = new Client(net)
 
@@ -75,7 +75,7 @@ export const acceptOffer = async (buyOffer: string, sellOffer: string) => {
         Account: process.env.PLATFORM_XRP_ACCOUNT as string,
         NFTokenBuyOffer: buyOffer,
         NFTokenSellOffer: sellOffer,
-        NFTokenBrokerFee: "10"
+        // NFTokenBrokerFee: "0"
     }
     const transaction = await xrpl.submitAndWait(tx_json, {wallet: platformWallet})
     console.log(transaction)

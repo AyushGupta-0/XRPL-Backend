@@ -1,29 +1,29 @@
 import {Router} from 'express'
-import {createOrLoginXumm, createAccountAfterOAuth, getProfile} from '../controllers/auth'
+import {createOrLoginXumm, updateOAuthAccount, getProfile} from '../controllers/auth'
 // import checkAuthentication from '../middlewares/checkAuthentication'
 import passport from '../services/passport'
 import ApiRequest from '../interfaces/ApiRequest'
-import verifyToken from '../middlewares/verifyJWT'
+import {verifyAccount} from '../middlewares/verifyJWT'
 import generateToken from '../helpers/jwt'
 const router: Router = Router()
 
 
-// @route     GET /api/auth/xumm
+// @route     GET /v1/auth/xumm
 // @desc      Get Xumm payload for creating or logging into account
 // @access    Public
 router.get('/xumm', createOrLoginXumm)
 
-// @route     GET /api/auth/createAccountAfterOAuth
+// @route     PUT /v1/auth/oauth
 // @desc      Update account details after OAuth
 // @access    Restricted (Only for users who have logged in with OAuth)
-router.post('/createAccountAfterOAuth', verifyToken, createAccountAfterOAuth)
+router.put('/oauth', verifyAccount, updateOAuthAccount)
 
-// @route     GET /api/auth/profile
+// @route     GET /v1/auth/profile
 // @desc      Get user profile details
 // @access    Private
-router.get('/profile', verifyToken, getProfile)
+router.get('/profile', verifyAccount, getProfile)
 
-// @route     GET /api/auth/google
+// @route     GET /v1/auth/google
 // @desc      OAuth screen for google
 // @access    Public
 router.get('/google', passport.authenticate('google', { scope: ['profile', 'email'] }));
@@ -38,7 +38,7 @@ router.get('/google/redirect', passport.authenticate('google', {
     return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
 });
 
-// @route     GET /api/auth/twitter
+// @route     GET /v1/auth/twitter
 // @desc      OAuth screen for twitter
 // @access    Public
 router.get('/twitter', passport.authenticate('twitter'));
@@ -53,7 +53,7 @@ router.get('/twitter/redirect', passport.authenticate('twitter', {
     return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
 });
 
-// @route     GET /api/auth/discord
+// @route     GET /v1/auth/discord
 // @desc      OAuth screen for discord
 // @access    Public
 router.get('/discord', passport.authenticate('discord', {scope: ['identify', 'email']}));
