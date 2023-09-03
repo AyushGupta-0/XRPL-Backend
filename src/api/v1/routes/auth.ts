@@ -8,10 +8,10 @@ import generateToken from '../helpers/jwt'
 const router: Router = Router()
 
 
-// @route     GET /v1/auth/xumm
+// @route     POST /v1/auth/xumm
 // @desc      Get Xumm payload for creating or logging into account
 // @access    Public
-router.get('/xumm', createOrLoginXumm)
+router.post('/xumm', createOrLoginXumm)
 
 // @route     PUT /v1/auth/oauth
 // @desc      Update account details after OAuth
@@ -33,9 +33,9 @@ router.get('/google/redirect', passport.authenticate('google', {
 }), (req: ApiRequest, res) => {
     const token = generateToken(req.user.id)
     if(req.user.defaultWallet){
-        return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=dashboard`)
+        return res.redirect(`${process.env.CLIENT_URL}/setUser?token=${token}&next=home`)
     }
-    return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
+    return res.redirect(`${process.env.CLIENT_URL}/setUser?token=${token}`)
 });
 
 // @route     GET /v1/auth/twitter
@@ -48,9 +48,9 @@ router.get('/twitter/redirect', passport.authenticate('twitter', {
 }), (req: ApiRequest, res) => {
     const token = generateToken(req.user.id)
     if(req.user.defaultWallet){
-        return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=dashboard`)
+        return res.redirect(`${process.env.CLIENT_URL}/setUser?token=${token}&next=home`)
     }
-    return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
+    return res.redirect(`${process.env.CLIENT_URL}/setUser?token=${token}`)
 });
 
 // @route     GET /v1/auth/discord
@@ -63,9 +63,9 @@ router.get('/discord/redirect', passport.authenticate('discord', {
 }), (req: ApiRequest, res) => {
     const token = generateToken(req.user.id)
     if(req.user.defaultWallet){
-        return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=dashboard`)
+        return res.redirect(`${process.env.CLIENT_URL}/setUser?token=${token}&next=home`)
     }
-    return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
+    return res.redirect(`${process.env.CLIENT_URL}/setUser?token=${token}`)
 });
 
 

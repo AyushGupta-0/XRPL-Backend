@@ -67,7 +67,7 @@ export const getNFTDetails = (req: ApiRequest, res: Response) => {
 
 // Mint a new NFT
 export const mintNFT = async (req: ApiRequest, res: Response) => {
-    if(req.body.name && req.file){
+    if(req.body.id && req.body.name && req.file){
         const uri = await uploadToIPFS(req.file?.buffer)
         setMinter(req.user.defaultWallet as string).then(async () => {
             const transaction: XummPostPayloadBodyJson = {
@@ -98,9 +98,9 @@ export const mintNFT = async (req: ApiRequest, res: Response) => {
                             mintedAt: Date.now(),
                         }
                         const nftRef = await db.collection('nfts').add(nft)
-                        req.io?.emit('nftMinted', {status: 'success', message: 'NFT minted successfully', data: {id: nftRef.id, ...nft}})
+                        req.io?.emit(`nftMinted-${req.body.id}`, {status: 'success', message: 'NFT minted successfully', data: {id: nftRef.id, ...nft}})
                     }else{
-                        req.io?.emit('nftMinted', {status: 'failed', message: 'NFT minting failed'})
+                        req.io?.emit(`nftMinted-${req.body.id}`, {status: 'failed', message: 'NFT minting failed'})
                     }
                 }
             })
