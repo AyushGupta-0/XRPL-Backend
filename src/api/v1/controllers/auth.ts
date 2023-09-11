@@ -70,12 +70,6 @@ export const createOrLoginXumm = async (req: ApiRequest, res: Response) => {
 }
 
 
-// Returns state of the user (logged in or not)
-export const getProfile = async (req: ApiRequest, res: Response) => {
-	res.json({status: 'success', data: req.user})
-}
-
-
 // TODO: Update account after OAuth login to store user data (username, bio, etc.)
 export const updateOAuthAccount = async (req: ApiRequest, res: Response) => {
 	if(req.user.provider === 'xumm'){

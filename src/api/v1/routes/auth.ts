@@ -1,6 +1,5 @@
 import {Router} from 'express'
-import {createOrLoginXumm, updateOAuthAccount, getProfile} from '../controllers/auth'
-// import checkAuthentication from '../middlewares/checkAuthentication'
+import {createOrLoginXumm, updateOAuthAccount} from '../controllers/auth'
 import passport from '../services/passport'
 import ApiRequest from '../interfaces/ApiRequest'
 import {verifyAccount} from '../middlewares/verifyJWT'
@@ -17,11 +16,6 @@ router.post('/xumm', createOrLoginXumm)
 // @desc      Update account details after OAuth
 // @access    Restricted (Only for users who have logged in with OAuth)
 router.put('/oauth', verifyAccount, updateOAuthAccount)
-
-// @route     GET /v1/auth/profile
-// @desc      Get user profile details
-// @access    Private
-router.get('/profile', verifyAccount, getProfile)
 
 // @route     GET /v1/auth/google
 // @desc      OAuth screen for google
