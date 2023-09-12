@@ -16,5 +16,14 @@ export const getPublicProfile = async (req: ApiRequest, res: Response) => {
 	if(!userDoc){
 		return res.status(404).json({status: 'failed', message: 'User not found'})
 	}
-	res.json({status: 'success', data: { ...userDoc.data()}})
+	res.json({
+		status: 'success',
+		data: {
+			username: userDoc.data().username,
+			defaultWallet: userDoc.data().defaultWallet,
+			profilePicture: userDoc.data().profilePicture,
+			name: userDoc.data().name,
+			bio: userDoc.data().bio,
+		}
+	})
 }
