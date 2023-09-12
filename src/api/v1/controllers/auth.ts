@@ -11,64 +11,62 @@ import {v4} from 'uuid'
 
 // Controller for creating/logging into account using Xumm (Anonymous User) 
 export const createOrLoginXumm = async (req: ApiRequest, res: Response) => {
-	const transaction: XummPostPayloadBodyJson = {
-		txjson: {
-			TransactionType: "SignIn",
-		},
-	}
-	const subscription: PayloadAndSubscription | undefined = await xumm.payload?.createAndSubscribe(transaction, async (event) => {
-		if(event.data.signed){
-			const payload = await xumm.payload?.get(event.data.payload_uuidv4, true)
-			const query = await db.collection('users').where('defaultWallet', '==', payload?.response.account as string).limit(1).get()
-			let userDoc = query.docs[0]
-			if(userDoc && userDoc.data()?.provider === 'xumm'){
-				await userDoc.ref.update({
-					updatedAt: Date.now(),
-					xummToken: payload?.application.issued_user_token as string
-				})
-				const balance = await fetchBalance(payload?.response.account as string)
-				const token = generateToken(userDoc.id)
-				req.io?.emit('accountCreated', {
-					status: 'success',
-					provider: 'xumm',
-					user: userDoc.data(),
-					token,
-					balance
-				})
-			}else if(userDoc){
-				req.io?.emit('accountCreated', {
-					status: 'failed',
-					provider: userDoc.data()?.provider,
-					message: 'Account already exists but not created with Xumm'
-				})
-			}else{
-				let user: User = {
-					username: `user_${v4()}`,
-					defaultWallet: payload?.response.account as string,
-					createdAt: Date.now(),
-					updatedAt: Date.now(),
-					provider: 'xumm',
-					xummToken: payload?.application.issued_user_token as string
-				}
-				const userRef = await db.collection('users').add(user)
-				const balance = await fetchBalance(payload?.response.account as string)
-				const token = generateToken(userRef.id)
-				req.io?.emit('accountCreated', {
-					status: 'success',
-					balance,
-					user,
-					token
-				})
-			}
+	if(req.body.id){
+		const transaction: XummPostPayloadBodyJson = {
+			txjson: {
+				TransactionType: "SignIn",
+			},
 		}
-	})
-	res.json({uuid: subscription?.created.uuid, url: `https://xumm.app/sign/${subscription?.created.uuid}`, wss: `wss://xumm.app/sign/${subscription?.created.uuid}`})
-}
-
-
-// Returns state of the user (logged in or not)
-export const getProfile = async (req: ApiRequest, res: Response) => {
-	res.json({status: 'success', data: req.user})
+		const subscription: PayloadAndSubscription | undefined = await xumm.payload?.createAndSubscribe(transaction, async (event) => {
+			if(event.data.signed){
+				const payload = await xumm.payload?.get(event.data.payload_uuidv4, true)
+				const query = await db.collection('users').where('defaultWallet', '==', payload?.response.account as string).limit(1).get()
+				let userDoc = query.docs[0]
+				if(userDoc && userDoc.data()?.provider === 'xumm'){
+					await userDoc.ref.update({
+						updatedAt: Date.now(),
+						xummToken: payload?.application.issued_user_token as string
+					})
+					const balance = await fetchBalance(payload?.response.account as string)
+					const token = generateToken(userDoc.id)
+					req.io?.emit(`accountCreated-${req.body.id}`, {
+						status: 'success',
+						provider: 'xumm',
+						user: userDoc.data(),
+						token,
+						balance
+					})
+				}else if(userDoc){
+					req.io?.emit(`accountCreated-${req.body.id}`, {
+						status: 'failed',
+						provider: userDoc.data()?.provider,
+						message: 'Account already exists but not created with Xumm'
+					})
+				}else{
+					let user: User = {
+						username: `user_${v4()}`,
+						defaultWallet: payload?.response.account as string,
+						createdAt: Date.now(),
+						updatedAt: Date.now(),
+						provider: 'xumm',
+						xummToken: payload?.application.issued_user_token as string
+					}
+					const userRef = await db.collection('users').add(user)
+					const balance = await fetchBalance(payload?.response.account as string)
+					const token = generateToken(userRef.id)
+					req.io?.emit(`accountCreated-${req.body.id}`, {
+						status: 'success',
+						balance,
+						user,
+						token
+					})
+				}
+			}
+		})
+		res.json({uuid: subscription?.created.uuid, url: `https://xumm.app/sign/${subscription?.created.uuid}`, wss: `wss://xumm.app/sign/${subscription?.created.uuid}`})
+	}else{
+		res.status(400).json({status: 'failed', message: 'Invalid Request'})
+	}
 }
 
 
@@ -76,7 +74,7 @@ export const getProfile = async (req: ApiRequest, res: Response) => {
 export const updateOAuthAccount = async (req: ApiRequest, res: Response) => {
 	if(req.user.provider === 'xumm'){
 		res.json({status: 'failed', message: 'Account already exists'})
-	}else{
+	}else if(req.body.id && req.body.username){
 		const transaction: XummPostPayloadBodyJson = {
 			txjson: {
 				TransactionType: "SignIn",
@@ -96,7 +94,7 @@ export const updateOAuthAccount = async (req: ApiRequest, res: Response) => {
 						})
 						const balance = await fetchBalance(payload?.response.account as string)
 						user.ref.get().then((doc) => {
-							req.io?.emit('accountCreated', {
+							req.io?.emit(`accountCreated-${req.body.id}`, {
 								status: 'success',
 								provider: doc.data()?.provider,
 								user: {id: doc.id, ...doc.data()},
@@ -112,7 +110,7 @@ export const updateOAuthAccount = async (req: ApiRequest, res: Response) => {
 						})
 						const balance = await fetchBalance(payload?.response.account as string)
 						user.ref.get().then((doc) => {
-							req.io?.emit('accountCreated', {
+							req.io?.emit(`accountCreated-${req.body.id}`, {
 								status: 'success',
 								provider: doc.data()?.provider,
 								user: {id: doc.id, ...doc.data()},
@@ -124,5 +122,7 @@ export const updateOAuthAccount = async (req: ApiRequest, res: Response) => {
 			}
 		})
 		res.json({uuid: subscription?.created.uuid, url: `https://xumm.app/sign/${subscription?.created.uuid}`, wss: `wss://xumm.app/sign/${subscription?.created.uuid}`})
+	}else{
+		res.status(400).json({status: 'failed', message: 'Invalid Request'})
 	}
 }

@@ -1,6 +1,5 @@
 import {Router} from 'express'
-import {createOrLoginXumm, updateOAuthAccount, getProfile} from '../controllers/auth'
-// import checkAuthentication from '../middlewares/checkAuthentication'
+import {createOrLoginXumm, updateOAuthAccount} from '../controllers/auth'
 import passport from '../services/passport'
 import ApiRequest from '../interfaces/ApiRequest'
 import {verifyAccount} from '../middlewares/verifyJWT'
@@ -8,20 +7,15 @@ import generateToken from '../helpers/jwt'
 const router: Router = Router()
 
 
-// @route     GET /v1/auth/xumm
+// @route     POST /v1/auth/xumm
 // @desc      Get Xumm payload for creating or logging into account
 // @access    Public
-router.get('/xumm', createOrLoginXumm)
+router.post('/xumm', createOrLoginXumm)
 
 // @route     PUT /v1/auth/oauth
 // @desc      Update account details after OAuth
 // @access    Restricted (Only for users who have logged in with OAuth)
 router.put('/oauth', verifyAccount, updateOAuthAccount)
-
-// @route     GET /v1/auth/profile
-// @desc      Get user profile details
-// @access    Private
-router.get('/profile', verifyAccount, getProfile)
 
 // @route     GET /v1/auth/google
 // @desc      OAuth screen for google
@@ -33,9 +27,9 @@ router.get('/google/redirect', passport.authenticate('google', {
 }), (req: ApiRequest, res) => {
     const token = generateToken(req.user.id)
     if(req.user.defaultWallet){
-        return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=dashboard`)
+        return res.redirect(`${process.env.CLIENT_URL}/setUser?token=${token}&next=home`)
     }
-    return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
+    return res.redirect(`${process.env.CLIENT_URL}/setUser?token=${token}`)
 });
 
 // @route     GET /v1/auth/twitter
@@ -48,9 +42,9 @@ router.get('/twitter/redirect', passport.authenticate('twitter', {
 }), (req: ApiRequest, res) => {
     const token = generateToken(req.user.id)
     if(req.user.defaultWallet){
-        return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=dashboard`)
+        return res.redirect(`${process.env.CLIENT_URL}/setUser?token=${token}&next=home`)
     }
-    return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
+    return res.redirect(`${process.env.CLIENT_URL}/setUser?token=${token}`)
 });
 
 // @route     GET /v1/auth/discord
@@ -63,9 +57,9 @@ router.get('/discord/redirect', passport.authenticate('discord', {
 }), (req: ApiRequest, res) => {
     const token = generateToken(req.user.id)
     if(req.user.defaultWallet){
-        return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=dashboard`)
+        return res.redirect(`${process.env.CLIENT_URL}/setUser?token=${token}&next=home`)
     }
-    return res.redirect(`${process.env.CLIENT_URL}/setToken?token=${token}&next=continue-form`)
+    return res.redirect(`${process.env.CLIENT_URL}/setUser?token=${token}`)
 });
 
 
