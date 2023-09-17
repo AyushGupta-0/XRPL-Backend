@@ -9,7 +9,7 @@ router.use('/nfts', nftsRouter)
 router.use('/user', userRouter)
 
 router.get('/', (req, res) => {
-    res.json({status: 'success', message: 'Welcome to the NFT Marketplace API'})
+    res.json({status: 'success', message: 'Welcome to the NFT Marketplace XRPL API'})
 })
 
 export default router
